@@ -132,7 +132,7 @@ export default class DashboardScreen extends React.Component {
   checkDeliverInArea(location) {
     console.log("checkDeliverInArea: " + this.state.userId);
     try {
-      fetch('https://d.ringameal.com/api/checklocationinareafordeliver1', {
+      fetch('https://d.ringameal.com/api/checklocationinareafordeliver', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -147,7 +147,7 @@ export default class DashboardScreen extends React.Component {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        var isInArea = responseJson.result;
+        var isInArea = responseJson.result.result;
         this.setState({
           isLoading: false,
           isOnline: isInArea,
@@ -158,8 +158,10 @@ export default class DashboardScreen extends React.Component {
           title: title,
           duration: Snackbar.LENGTH_LONG,
         });
-
         this.saveWorkStatus(isInArea);
+
+        var areaShape = responseJson.result.AreaShape;
+        console.log(areaShape);
       })
     }
     catch(error) {
