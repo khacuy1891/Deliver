@@ -13,5 +13,6 @@ from optparse import OptionParser
 current_dir = os.path.dirname(os.path.realpath(__file__))
 command = 'react-native run-android'
 print command
+os.system('cls')
 os.system(command)
 

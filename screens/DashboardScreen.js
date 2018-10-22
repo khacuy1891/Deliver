@@ -162,6 +162,9 @@ export default class DashboardScreen extends React.Component {
 
         var areaShape = responseJson.result.AreaShape;
         console.log(areaShape);
+
+        //const HomeScreen = DashboardStack.getComponentForRouteName("Home");
+        //HomeScreen.setState({coordinates: areaShape});
       })
     }
     catch(error) {

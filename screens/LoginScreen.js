@@ -7,9 +7,9 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, ScrollView} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, ScrollView, Alert} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
-import { Button } from 'react-native-material-ui';
+import {Button} from 'react-native-material-ui';
 import Firebase from 'firebase';
 
 import FirebaseCts from '../constants/FirebaseCts';
@@ -51,24 +51,33 @@ export default class LoginScreen extends React.Component {
     }
   }
 
+  isEmailValid(email) {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return reg.test(email) == 0;
+  }
+
   checkValid() {
     if(this.state.email.trim() === '') {
       this.setState({error: {email_require: 'Email is required'}})
       this.emailRef.current.focus();
       return false;
     }
-    else {
-      this.setState({error: {email_require: ''}})
+    
+    if(this.isEmailValid(this.state.email.trim())) {
+      this.setState({error: {email_require: 'Email is incorrect'}})
+      this.emailRef.current.focus();
+      return false;
     }
+
+    this.setState({error: {email_require: null}})
 
     if(this.state.password.trim() === '') {
       this.setState({error: {password_require: 'Password is required'}})
       this.pwRef.current.focus();
       return false;
     }
-    else {
-      this.setState({error: {password_require: ''}})
-    }
+
+    this.setState({error: {password_require: null}})
 
     return true;
   }
@@ -139,7 +148,9 @@ export default class LoginScreen extends React.Component {
               onPress={this.onLogin}/>
           </View>
 
-          <Text style={{marginTop: 10, marginBottom: 20}}>Don't remember password?</Text>  
+          <Text style={{marginTop: 20, marginBottom: 20}}
+            onPress={()=>this.props.navigation.navigate('ForgotPassword')}>Don't remember password?
+          </Text>  
         </View>
       </ScrollView>
     );
