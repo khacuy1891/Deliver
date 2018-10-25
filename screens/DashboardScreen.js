@@ -84,9 +84,6 @@ export default class DashboardScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.getCurrentLocation = this.getCurrentLocation.bind(this);
-    this.saveWorkStatus = this.saveWorkStatus.bind(this);
-
     this.state.userId = Firebase.auth().currentUser.uid;
     DeliverRef = Firebase.database().ref("delivers").child(this.state.userId);
     WorkStatusRef = DeliverRef.child('workstatus');
@@ -114,7 +111,7 @@ export default class DashboardScreen extends React.Component {
       var workstatus = snapshot.val();
       console.log("WorkStatus: " + workstatus);      
       if(workstatus) {
-        this.getCurrentLocation();
+        this.getCurrentLocation.bind(this);
       }
       else {
         this.setState({isOnline: false});

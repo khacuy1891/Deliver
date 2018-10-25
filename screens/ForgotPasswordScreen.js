@@ -18,7 +18,7 @@ import COLOR from '../constants/Colors';
 export default class ForgotPasswordScreen extends React.Component {
 
   state = {
-    email: 'uybkt2@gmail.com',
+    email: '@gmail.com',
     error: {
       email_require: null,
     },
@@ -29,10 +29,6 @@ export default class ForgotPasswordScreen extends React.Component {
     super(props);
     this.emailRef = React.createRef();
     this.pwRef = React.createRef();
-
-    this.showLoading = this.showLoading.bind(this);
-    this.hideLoading = this.hideLoading.bind(this);
-    this.sendEmail = this.sendEmail.bind(this);
 
     if (!Firebase.apps.length) {
       Firebase.initializeApp(FirebaseCts.config);
@@ -117,7 +113,7 @@ export default class ForgotPasswordScreen extends React.Component {
             <View style={{marginTop: 10, flexDirection: 'row', justifyContent: 'flex-end'}}>
               <Button text="Send" raised accent
                 style={{container: {width: 100, height: 45}}}
-                onPress={this.sendEmail}/>
+                onPress={this.sendEmail.bind(this)}/>
             </View>
           </View>
           <View style={{marginTop: 40, marginBottom: 20, flexDirection: 'row'}}>
