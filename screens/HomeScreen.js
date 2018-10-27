@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 
 class HomeScreen extends React.Component {
   state = {
+    watchId: 0,
     lat: 16.064732,
     lng: 108.223937,
     error: 'error',
@@ -26,13 +27,7 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    var options = {
-      enableHighAccuracy: false,
-      timeout: 5000,
-      maximumAge: 0
-    };
-
-    navigator.geolocation.watchPosition(
+    var _watchId = navigator.geolocation.watchPosition(
       (position) => {
         this.setState({
           lat: position.coords.latitude,
@@ -51,9 +46,11 @@ class HomeScreen extends React.Component {
       { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 },
     );
 
+    this.setState({watchId: _watchId});
   }
 
   componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.state.watchId);
     navigator.geolocation.stopObserving();
   }
    

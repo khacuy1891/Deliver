@@ -64,10 +64,9 @@ const store = createStore(reducer);
 
 const myState = store.getState();
 console.log(myState);
-
-console.log('TRUOC KHI DISPATCH: ' + store.getState().value);
+console.log('TRUOC KHI DISPATCH: ' + myState.value);
 store.dispatch({ type: 'UP'});
-console.log('SAU KHI DISPATCH: ' + store.getState().value);
+console.log('SAU KHI DISPATCH: ' + myState.value);
 
 type Props = {};
 export default class App extends Component<Props> {

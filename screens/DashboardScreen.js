@@ -90,6 +90,7 @@ class DashboardScreen extends React.Component {
     super(props);
 
     this.state.userId = Firebase.auth().currentUser.uid;
+    console.log("userId " + this.state.userId);
     DeliverRef = Firebase.database().ref("delivers").child(this.state.userId);
     WorkStatusRef = DeliverRef.child('workstatus');
   }
@@ -185,8 +186,8 @@ class DashboardScreen extends React.Component {
       <View style={{ flex: 1}}>
         <StatusBar backgroundColor={COLOR.colorPrimary} hidden={false}/>
 				<Toolbar
-          leftElement="arrow-back"
-          onLeftElementPress={() => this.props.navigation.navigate('ForgotPassword')}
+          //leftElement="arrow-back"
+          //onLeftElementPress={() => this.props.navigation.navigate('ForgotPassword')}
           style={{backgroundColor: COLOR.colorAccent}}
           centerElement={this.state.activeTab.toUpperCase()}
           rightElement={
