@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { StyleSheet, Text, View, ListView, TouchableHighlight, Image } from 'react-native';
+import { Card } from 'react-native-material-ui';
 import Colors from '../constants/Colors';
 
 export default class OrderScreen extends React.Component {
@@ -39,19 +40,21 @@ export default class OrderScreen extends React.Component {
   renderRow(rowData, sectionID, rowID) {
     if(rowID == 0) {
       return (
-        <TouchableHighlight onPress={()=> { console.log("onPress rowID: " + rowID); }}>
-          <View style={{margin: 10}}>
-            <View style={styles.row}>
-              <Text style={{color: Colors.colorAccent}}>{rowData.orderId}</Text>
-              <Text style={{fontSize: 14, color: Colors.colorAccent}}>{rowData.status}</Text>
+        <Card>
+          <TouchableHighlight onPress={()=> { console.log("onPress rowID: " + rowID); }}>
+            <View style={{margin: 10}}>
+              <View style={styles.row}>
+                <Text style={{color: Colors.colorAccent}}>{rowData.orderId}</Text>
+                <Text style={{fontSize: 14, color: Colors.colorAccent}}>{rowData.status}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={{fontSize: 16, color: Colors.black, fontWeight: 'bold'}}>{rowData.restaurantName}</Text>
+                <Image style={{width: 20, height: 20, tintColor: Colors.colorAccent}} source={rowData.image}/>
+              </View>
+              <Text>{rowData.restaurantAddress}</Text>
             </View>
-            <View style={styles.row}>
-              <Text style={{fontSize: 16, color: Colors.black, fontWeight: 'bold'}}>{rowData.restaurantName}</Text>
-              <Image style={{width: 20, height: 20, tintColor: Colors.colorAccent}} source={rowData.image}/>
-            </View>
-            <Text>{rowData.restaurantAddress}</Text>
-          </View>
-        </TouchableHighlight>
+          </TouchableHighlight>
+        </Card>
       );
     }
     else {

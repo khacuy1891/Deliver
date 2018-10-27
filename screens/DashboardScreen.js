@@ -11,6 +11,8 @@ import {StatusBar, Text, View, Button, Switch, Alert} from 'react-native';
 
 import { createStackNavigator, createBottomTabNavigator, TabRouter } from 'react-navigation';
 import { Toolbar, BottomNavigation } from 'react-native-material-ui';
+import { checkInArea } from "../App";
+import { connect } from "react-redux";
 
 // import BottomNavigation, {
 //   FullTab
@@ -32,10 +34,10 @@ import FirebaseCts from '../constants/FirebaseCts';
 
 const DashboardStack = TabRouter (
   {
-		Home: HomeScreen,
-		Order: OrderScreen,
-		History: HistoryScreen,
-		Profile: ProfileScreen,
+    Home: HomeScreen,
+    Order: OrderScreen,
+    History: HistoryScreen,
+    Profile: ProfileScreen,
   },
   {
     //initialRouteName: 'HomeScreen',
@@ -48,25 +50,28 @@ const DashboardStack = TabRouter (
 class TabContentNavigator extends Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {
-      active: props.value.activeTab,
-    };
+    // this.state = {
+    //   active: props.value.activeTab,
+    //   tabCoordinates: newProps.value.coordinates,
+    // };
   }
 
   //this method will not get called first time
   componentWillReceiveProps(newProps){
-    this.setState({
-      active: newProps.value.activeTab,
-    }); 
+    // this.setState({
+    //   active: newProps.value.activeTab,
+    //   tabCoordinates: newProps.value.coordinates,
+    // });
   }
 
   render() {
-    const Component = DashboardStack.getComponentForRouteName(this.state.active);
-    return <Component/>;
+    const Component = DashboardStack.getComponentForRouteName(this.props.value.activeTab);
+    // Pass data to child Component
+    return <Component data={this.props.value}/>;
   }
 }
 
-export default class DashboardScreen extends React.Component {
+class DashboardScreen extends React.Component {
   state = {
     activeTab: 'Home',
     isOnline: false,
@@ -111,7 +116,7 @@ export default class DashboardScreen extends React.Component {
       var workstatus = snapshot.val();
       console.log("WorkStatus: " + workstatus);      
       if(workstatus) {
-        this.getCurrentLocation.bind(this);
+        this.getCurrentLocation();
       }
       else {
         this.setState({isOnline: false});
@@ -157,11 +162,8 @@ export default class DashboardScreen extends React.Component {
         });
         this.saveWorkStatus(isInArea);
 
-        var areaShape = responseJson.result.AreaShape;
-        console.log(areaShape);
-
-        //const HomeScreen = DashboardStack.getComponentForRouteName("Home");
-        //HomeScreen.setState({coordinates: areaShape});
+        // set Coordinates to Redux
+        this.props.changeCoordinates(responseJson.result.AreaShape);
       })
     }
     catch(error) {
@@ -241,3 +243,17 @@ export default class DashboardScreen extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+  };
+}
+
+const mapDispatchToProps = dispatch => ({
+  changeCoordinates: (coordinates) => dispatch(checkInArea(coordinates))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+) (DashboardScreen);

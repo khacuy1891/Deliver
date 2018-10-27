@@ -23,12 +23,17 @@ class HomeScreen extends React.Component {
       latitudeDelta: 0.015,
       longitudeDelta: 0.0121,
     },
-    coordinates: [],
   }
 
   componentDidMount() {
-    navigator.geolocation.watchPosition((position) =>
-      {
+    var options = {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: 0
+    };
+
+    navigator.geolocation.watchPosition(
+      (position) => {
         this.setState({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -39,10 +44,13 @@ class HomeScreen extends React.Component {
             longitudeDelta: 0.0121,
           }
         });
+        console.log('watchPosition');
       },
+    
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 },
     );
+
   }
 
   componentWillUnmount() {
@@ -66,6 +74,7 @@ class HomeScreen extends React.Component {
             />
           }
           <MapView.Polyline
+            //coordinates={this.props.data.coordinates}
             coordinates={this.props.homeCoordinates}
             strokeColor="#00CC00"
             strokeWidth={5}
