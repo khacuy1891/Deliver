@@ -150,21 +150,25 @@ class DashboardScreen extends React.Component {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        var isInArea = responseJson.result.result;
-        this.setState({
-          isLoading: false,
-          isOnline: isInArea,
-        });
+        if(responseJson.result != null) {
+          var isInArea = responseJson.result.result;
+          this.setState({
+            isLoading: false,
+            isOnline: isInArea,
+          });
 
-        var title = isInArea? "You're online" : "Your location is out of service areas";
-        Snackbar.show({
-          title: title,
-          duration: Snackbar.LENGTH_LONG,
-        });
-        this.saveWorkStatus(isInArea);
+          var title = isInArea? "You're online" : "Your location is out of service areas";
+          Snackbar.show({
+            title: title,
+            duration: Snackbar.LENGTH_LONG,
+          });
+          this.saveWorkStatus(isInArea);
 
-        // set Coordinates to Redux
-        this.props.changeCoordinates(responseJson.result.AreaShape);
+          // set Coordinates to Redux
+          if(responseJson.result.AreaShape != null) {
+            this.props.changeCoordinates(responseJson.result.AreaShape);
+          }
+        }
       })
     }
     catch(error) {
