@@ -7,9 +7,9 @@
  */
 
 import React, {Component} from 'react';
-import {StatusBar, Text, View, Button, Switch, Alert} from 'react-native';
+import {StatusBar, Text, View, Switch} from 'react-native';
 
-import { createStackNavigator, createBottomTabNavigator, TabRouter } from 'react-navigation';
+import { TabRouter } from 'react-navigation';
 import { Toolbar, BottomNavigation } from 'react-native-material-ui';
 import { checkInArea } from "../App";
 import { connect } from "react-redux";

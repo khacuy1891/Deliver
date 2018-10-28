@@ -7,14 +7,11 @@
  */
 
 import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, Image, FlatList } from 'react-native';
-import { Card } from 'react-native-material-ui';
-import Colors from '../constants/Colors';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import FirebaseCts from '../constants/FirebaseCts';
 import OrderCts from '../constants/OrderCts';
 import Firebase from 'firebase';
-
-const image = require('../assets/images/ic_near.png');
+import ItemOrderPending from '../components/ItemOrderPending';
 
 export default class OrderScreen extends React.Component {
   state = {
@@ -70,57 +67,25 @@ export default class OrderScreen extends React.Component {
     this.setState({ orders: listOrder });
   }
 
-  highlightRow(sectionID, rowID) {
-    console.log("sectionID: " + sectionID + ", rowID: " + rowID);
-  }
+  _onPressItem = (index) => {
+    console.log("onPress: " + index);
+  };
 
-  renderRow(orderItem, rowID) {
-    if(rowID == 0) {
-      return (
-        <Card>
-          <TouchableHighlight onPress={()=> { console.log("onPress rowID: " + rowID + " " + orderItem.restaurantname); }}>
-            <View style={{margin: 10}}>
-              <View style={styles.row}>
-                <Text style={{color: Colors.colorAccent}}>{orderItem.orderId}</Text>
-                <Text style={{fontSize: 14, color: Colors.colorAccent}}>{orderItem.orderstatus}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={{fontSize: 16, fontWeight: 'bold'}}>{orderItem.restaurantname}</Text>
-                <Image style={{width: 20, height: 20, tintColor: Colors.colorAccent}} source={image}/>
-              </View>
-              <Text>{orderItem.restaurantaddress}</Text>
-            </View>
-          </TouchableHighlight>
-        </Card>
-      );
-    }
-    else {
-      return (
-        <Card>
-          <TouchableHighlight onPress={()=> { console.log("onPress rowID: " + rowID + " " + orderItem.restaurantname); }}>
-            <View style={{margin: 10}}>
-              <View style={styles.row}>
-                <Text>{orderItem.orderId}</Text>
-                <Text style={{fontSize: 14}}>{orderItem.orderstatus}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={{fontSize: 16, fontWeight: 'bold'}}>{orderItem.restaurantname}</Text>
-                <Image style={{width: 20, height: 20, tintColor: Colors.colorGrey}} source={image}/>
-              </View>
-              <Text>{orderItem.restaurantaddress}</Text>
-            </View>
-          </TouchableHighlight>
-        </Card>
-      );
-    }
-  }
+  _renderItem = ({item, index}) => (
+    <ItemOrderPending
+      rowID={index}
+      rowData={item}
+      onPressItem={this._onPressItem}
+      //selected={!!this.state.selected.get(item.id)}
+    />
+  );
 
   render() {
     return (
       <View style={styles.container}>
         <FlatList
           data={this.state.orders}
-          renderItem={({item, index}) => this.renderRow(item, index)}
+          renderItem={this._renderItem}
           keyExtractor={(item, index) => index.toString()}
         />
       </View>
