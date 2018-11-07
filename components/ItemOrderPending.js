@@ -15,10 +15,6 @@ import Colors from '../constants/Colors';
 const ic_near = require('../assets/images/ic_near.png');
 
 export default class ItemOrderPending extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   _onPress = () => {
     this.props.onPressItem(this.props.rowID);
   };

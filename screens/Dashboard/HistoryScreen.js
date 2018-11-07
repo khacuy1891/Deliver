@@ -10,11 +10,12 @@ import React from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Button } from 'react-native-material-ui';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import FirebaseCts from '../constants/FirebaseCts';
 import Firebase from 'firebase';
-import ItemOrderFinish from '../components/ItemOrderFinish';
 import Moment from 'moment';
-import Colors from '../constants/Colors';
+import ItemOrderFinish from '../../components/ItemOrderFinish';
+import FirebaseCts from '../../constants/FirebaseCts';
+import Colors from '../../constants/Colors';
+
 
 export default class HistoryScreen extends React.Component {
   state = {

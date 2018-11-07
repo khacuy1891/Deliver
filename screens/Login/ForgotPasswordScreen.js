@@ -12,13 +12,16 @@ import {TextField} from 'react-native-material-textfield';
 import {Button} from 'react-native-material-ui';
 import Firebase from 'firebase';
 
-import FirebaseCts from '../constants/FirebaseCts';
-import COLOR from '../constants/Colors';
+import FirebaseCts from '../../constants/FirebaseCts';
+import Colors from '../../constants/Colors';
+import Images from '../../constants/Images';
 
-export default class ForgotPasswordScreen extends React.Component {
+import { connect } from "react-redux";
+import { setEmail } from "../../App";
+
+class ForgotPasswordScreen extends React.Component {
 
   state = {
-    email: '@gmail.com',
     error: {
       email_require: null,
     },
@@ -41,13 +44,13 @@ export default class ForgotPasswordScreen extends React.Component {
   }
 
   checkValid() {
-    if(this.state.email.trim() === '') {
+    if(this.props.myEmail.trim() === '') {
       this.setState({error: {email_require: 'Email is required'}})
       this.emailRef.current.focus();
       return false;
     }
     
-    if(this.isEmailValid(this.state.email.trim())) {
+    if(this.isEmailValid(this.props.myEmail.trim())) {
       this.setState({error: {email_require: 'Email is incorrect'}})
       this.emailRef.current.focus();
       return false;
@@ -58,27 +61,7 @@ export default class ForgotPasswordScreen extends React.Component {
     return true;
   }
 
-  async sendEmail() {
-    if(!this.checkValid()) {
-      return;
-    }
-
-    //this.showLoading();
-    await Firebase.auth().sendPasswordResetEmail(this.state.email)
-      .then(()=>{
-        Alert.alert(
-          'Send email success',
-          '...',
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          {cancelable: false}
-        )
-      })
-      .catch(function(error){
-        //this.hideLoading();
-        console.log('Send email fail');
-      });
+  sendEmail() {
   }
 
   showLoading() {
@@ -91,23 +74,23 @@ export default class ForgotPasswordScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={{flexGrow:1}}>
+      <ScrollView contentContainerStyle={{flexGrow:1, backgroundColor: '#F5FCFF'}}>
         <View style={styles.container}>
           <Image
-            style={{width: 100, height: 100, marginTop: 50}}
-            source={require('../assets/images/ic_launcher.png')}
+            style={{width: 100, height: 100}}
+            source={Images.ic_launcher}
           />        
-          <Text style={{fontSize: 25, color: COLOR.colorAccent}}>Forgot password</Text>
-          <Text style={{marginTop: 50, fontSize: 15}}>Password reset link will be sent to your email</Text>
+          <Text style={{fontSize: 25, color: Colors.colorAccent}}>Forgot password</Text>
+          <Text style={{marginTop: 50, fontSize: 15, flexWrap: 'wrap'}}>Password reset link will be sent to your email</Text>
           <View style={styles.form}>
             <TextField
               label='Email'
               ref={this.emailRef}
               error={this.state.error.email_require}
-              returnKeyType='next'
-              value={this.state.email}
-              onSubmitEditing={() => this.pwRef.current.focus()}
-              onChangeText={ (text) => this.setState({ email: text }) }
+              returnKeyType='done'
+              value={this.props.myEmail}
+              onSubmitEditing={() => this.sendEmail()}
+              onChangeText={ (text) => this.props.setEmail(text) }
             />
 
             <View style={{marginTop: 10, flexDirection: 'row', justifyContent: 'flex-end'}}>
@@ -130,11 +113,27 @@ export default class ForgotPasswordScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 10,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   form: {
     width: "80%",
     marginTop: 10,
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    myEmail: state.email,
+  };
+}
+
+const mapDispatchToProps = dispatch => ({
+  setEmail: (email) => dispatch(setEmail(email))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+) (ForgotPasswordScreen);

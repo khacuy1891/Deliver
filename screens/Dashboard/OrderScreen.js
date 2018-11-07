@@ -8,10 +8,10 @@
 
 import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import FirebaseCts from '../constants/FirebaseCts';
-import OrderCts from '../constants/OrderCts';
 import Firebase from 'firebase';
-import ItemOrderPending from '../components/ItemOrderPending';
+import FirebaseCts from '../../constants/FirebaseCts';
+import OrderCts from '../../constants/OrderCts';
+import ItemOrderPending from '../../components/ItemOrderPending';
 
 export default class OrderScreen extends React.Component {
   state = {
@@ -42,10 +42,12 @@ export default class OrderScreen extends React.Component {
   fetchListOrder(snapshot) {
     var listOrder = [];
     var listOrderNew = [];
+    console.log("userId: " + this.state.userId);
     snapshot.forEach(snapshotChild => {
       var order = snapshotChild.val();
       try {
-        if (order.assignforuserid === 'MvDPjU8p6oZ95svXU6XGOsE46f83') {
+        console.log("userId: " + this.state.userId);
+        if (order.assignforuserid === this.state.userId) {
           order.orderId = snapshotChild.key;
           var statusOrder = order.orderstatus.toUpperCase();
           console.log("Order: " + order.orderId);

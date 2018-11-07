@@ -11,13 +11,15 @@ import {Platform, StyleSheet, Text, View, Image, ScrollView, Alert} from 'react-
 import {TextField} from 'react-native-material-textfield';
 import {Button} from 'react-native-material-ui';
 import Firebase from 'firebase';
+import { connect } from "react-redux";
 
-import FirebaseCts from '../constants/FirebaseCts';
+import { setEmail } from "../../App";
+import FirebaseCts from '../../constants/FirebaseCts';
+import Images from '../../constants/Images';
 
-export default class LoginScreen extends React.Component {
+class LoginScreen extends React.Component {
 
   state = {
-    email: 'uybkt2@gmail.com',
     password: '123456',
     phone: '091111',
     error: {
@@ -57,13 +59,13 @@ export default class LoginScreen extends React.Component {
   }
 
   checkValid() {
-    if(this.state.email.trim() === '') {
+    if(this.props.myEmail.trim() === '') {
       this.setState({error: {email_require: 'Email is required'}})
       this.emailRef.current.focus();
       return false;
     }
     
-    if(this.isEmailValid(this.state.email.trim())) {
+    if(this.isEmailValid(this.props.myEmail.trim())) {
       this.setState({error: {email_require: 'Email is incorrect'}})
       this.emailRef.current.focus();
       return false;
@@ -88,7 +90,7 @@ export default class LoginScreen extends React.Component {
     }
 
     //this.showLoading();
-    await Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    await Firebase.auth().signInWithEmailAndPassword(this.props.myEmail, this.state.password)
       .then(()=>{
         console.log('Login success');
         this.props.navigation.navigate('Dashboard');
@@ -115,13 +117,18 @@ export default class LoginScreen extends React.Component {
     this.setState({isLoading: false})
   }
 
+  onForgotPassword() {
+    //this.props.setEmail(this.props.myEmail);
+    this.props.navigation.navigate('ForgotPassword');
+  }
+
   render() {
     return (
-      <ScrollView contentContainerStyle={{flexGrow:1}}>
+      <ScrollView contentContainerStyle={{flexGrow:1, backgroundColor: '#F5FCFF'}}>
         <View style={styles.container}>
           <Image
-            style={{width: 100, height: 100, marginTop: 50}}
-            source={require('../assets/images/ic_launcher.png')}
+            style={{width: 100, height: 100}}
+            source={Images.ic_launcher}
           />        
           <Text>Fast, easy, best price</Text>
           <View style={styles.form}>
@@ -130,9 +137,9 @@ export default class LoginScreen extends React.Component {
               ref={this.emailRef}
               error={this.state.error.email_require}
               returnKeyType='next'
-              value={this.state.email}
+              value={this.props.myEmail}
               onSubmitEditing={() => this.pwRef.current.focus()}
-              onChangeText={ (text) => this.setState({ email: text }) }
+              onChangeText={ (text) => this.props.setEmail(text) }
             />
             <TextField
               label='Password'
@@ -149,7 +156,7 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <Text style={{marginTop: 20, marginBottom: 20}}
-            onPress={()=>this.props.navigation.navigate('ForgotPassword')}>Don't remember password?
+            onPress={()=> this.onForgotPassword()}>Don't remember password?
           </Text>  
         </View>
       </ScrollView>
@@ -160,10 +167,25 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   form: {
     width: "80%",
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    myEmail: state.email,
+  };
+}
+
+const mapDispatchToProps = dispatch => ({
+  setEmail: (email) => dispatch(setEmail(email))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+) (LoginScreen);

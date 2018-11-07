@@ -11,26 +11,18 @@ import {StatusBar, Text, View, Switch} from 'react-native';
 
 import { TabRouter } from 'react-navigation';
 import { Toolbar, BottomNavigation } from 'react-native-material-ui';
-import { checkInArea } from "../App";
 import { connect } from "react-redux";
+import Snackbar from 'react-native-snackbar';
 
-// import BottomNavigation, {
-//   FullTab
-// } from 'react-native-material-bottom-navigation'
-
-//import Icon from '@expo/vector-icons/MaterialCommunityIcons'
-
-//import AppNavigator from '../navigation/AppNavigator'
-
+import { checkInArea } from "../../App";
 import HomeScreen from './HomeScreen';
 import OrderScreen from './OrderScreen';
 import HistoryScreen from './HistoryScreen';
 import ProfileScreen from './ProfileScreen';
-import Snackbar from 'react-native-snackbar';
 
 import Firebase from 'firebase';
-import COLOR from '../constants/Colors';
-import FirebaseCts from '../constants/FirebaseCts';
+import Colors from '../../constants/Colors';
+import FirebaseCts from '../../constants/FirebaseCts';
 
 const DashboardStack = TabRouter (
   {
@@ -101,7 +93,7 @@ class DashboardScreen extends React.Component {
   }
 
   async onGetConnectStatus(){
-    Firebase.database().ref(".info/connected").on('value', (snapshot)=> {
+    await Firebase.database().ref(".info/connected").on('value', (snapshot)=> {
       var connected = snapshot.val();
       if (connected) {
         var connectStatusRef = DeliverRef.child("connectstatus");
@@ -113,7 +105,7 @@ class DashboardScreen extends React.Component {
   }
 
   async onGetWorkStatus(){
-    WorkStatusRef.on('value', (snapshot)=> {
+    await WorkStatusRef.on('value', (snapshot)=> {
       var workstatus = snapshot.val();
       console.log("WorkStatus: " + workstatus);      
       if(workstatus) {
@@ -188,18 +180,18 @@ class DashboardScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1}}>
-        <StatusBar backgroundColor={COLOR.colorPrimary} hidden={false}/>
+        <StatusBar backgroundColor={Colors.colorPrimary} hidden={false}/>
 				<Toolbar
           //leftElement="arrow-back"
           //onLeftElementPress={() => this.props.navigation.navigate('ForgotPassword')}
-          style={{backgroundColor: COLOR.colorAccent}}
+          style={{backgroundColor: Colors.colorAccent}}
           centerElement={this.state.activeTab.toUpperCase()}
           rightElement={
             <View style={{ flexDirection: 'row', alignItems:'center'}}>
               <Text style={{color:'white'}}>{this.state.isOnline ? "Online" : "Offline"}</Text>
               <Switch               
-                  trackColor={COLOR.colorPrimary}
-                  thumbColor={COLOR.colorPrimary} 
+                  trackColor={Colors.colorPrimary}
+                  thumbColor={Colors.colorPrimary} 
                   value={this.state.isOnline}
                   onValueChange={(value) => {
                     this.setState({isOnline: value});
@@ -209,7 +201,7 @@ class DashboardScreen extends React.Component {
             </View>
           }
           style={{
-            container: { backgroundColor: COLOR.colorAccent },
+            container: { backgroundColor: Colors.colorAccent },
           }}
 				/>
 
@@ -217,7 +209,7 @@ class DashboardScreen extends React.Component {
 
         <BottomNavigation active={this.state.activeTab} hidden={false}
           style={{
-            container: { backgroundColor: COLOR.colorAccent, borderColor: 'white' },
+            container: { backgroundColor: Colors.colorAccent, borderColor: 'white' },
           }} >
 					<BottomNavigation.Action
 						key="Home"
