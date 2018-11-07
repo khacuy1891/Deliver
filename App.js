@@ -17,9 +17,6 @@ import LoginScreen from './screens/Login/LoginScreen';
 import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
 import DashboardScreen from './screens/Dashboard/DashboardScreen';
 
-
-console.disableYellowBox = true;
-
 const defaultState = {
   value: 0,
   email: 'uybkt2@gmail.com',
