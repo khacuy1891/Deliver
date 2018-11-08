@@ -72,7 +72,7 @@ class HomeScreen extends React.Component {
           }
           <MapView.Polyline
             //coordinates={this.props.data.coordinates}
-            coordinates={this.props.homeCoordinates}
+            coordinates={this.props.myCoordinates}
             strokeColor="#00CC00"
             strokeWidth={5}
           />
@@ -85,7 +85,7 @@ class HomeScreen extends React.Component {
 function mapStateToProps(state) {
   return {
     myValue: state.value,
-    homeCoordinates: state.coordinates
+    myCoordinates: state.reducerDashboard.coordinates,
   };
 }
 

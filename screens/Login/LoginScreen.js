@@ -13,7 +13,7 @@ import {Button} from 'react-native-material-ui';
 import Firebase from 'firebase';
 import { connect } from "react-redux";
 
-import { setEmail } from "../../App";
+import { setEmail } from "./action/action";
 import FirebaseCts from '../../constants/FirebaseCts';
 import Images from '../../constants/Images';
 
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    myEmail: state.email,
+    myEmail: state.reducerLogin.email,
   };
 }
 

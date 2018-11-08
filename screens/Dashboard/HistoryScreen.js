@@ -39,12 +39,13 @@ export default class HistoryScreen extends React.Component {
     this.getFinishOrders();
   }
 
-  getFinishOrders() {    
-    var URL = "https://de.ringameal.com/api/getfinishorders?"
-            + "token=" + FirebaseCts.KEY_TOKEN
-            + "&deliverId=hQg8ovFUIsdOkxtAAiuJHaiTMpk2" //+ this.state.userId
-            + "&fromDate=" + Moment(this.state.dateFrom).format("MM/DD/YYYY")
-            + "&toDate=" + Moment(this.state.dateTo).format("MM/DD/YYYY");
+  getFinishOrders() {
+    var params = [];
+    params.push("token=" + FirebaseCts.KEY_TOKEN);
+    params.push("deliverId=hQg8ovFUIsdOkxtAAiuJHaiTMpk2");
+    params.push("fromDate=" + Moment(this.state.dateFrom).format("MM/DD/YYYY"));
+    params.push("toDate=" + Moment(this.state.dateTo).format("MM/DD/YYYY"));
+    var URL = "https://de.ringameal.com/api/getfinishorders?" + params.join('&');
 
     console.log("getFinishOrders: " + URL);    
     try {

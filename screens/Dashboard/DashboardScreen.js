@@ -14,7 +14,6 @@ import { Toolbar, BottomNavigation } from 'react-native-material-ui';
 import { connect } from "react-redux";
 import Snackbar from 'react-native-snackbar';
 
-import { checkInArea } from "../../App";
 import HomeScreen from './HomeScreen';
 import OrderScreen from './OrderScreen';
 import HistoryScreen from './HistoryScreen';
@@ -23,6 +22,7 @@ import ProfileScreen from './ProfileScreen';
 import Firebase from 'firebase';
 import Colors from '../../constants/Colors';
 import FirebaseCts from '../../constants/FirebaseCts';
+import { checkInArea } from "./action/action";
 
 const DashboardStack = TabRouter (
   {

@@ -17,7 +17,7 @@ import Colors from '../../constants/Colors';
 import Images from '../../constants/Images';
 
 import { connect } from "react-redux";
-import { setEmail } from "../../App";
+import { setEmail } from './action/action';
 
 class ForgotPasswordScreen extends React.Component {
 
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    myEmail: state.email,
+    myEmail: state.reducerLogin.email,
   };
 }
 

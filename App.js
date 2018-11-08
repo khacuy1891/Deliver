@@ -10,70 +10,24 @@ import React, {Component} from 'react';
 
 import { createStackNavigator } from 'react-navigation';
 
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 
 import LoginScreen from './screens/Login/LoginScreen';
 import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
 import DashboardScreen from './screens/Dashboard/DashboardScreen';
 
-const defaultState = {
-  value: 0,
-  email: 'uybkt2@gmail.com',
-  coordinates: [],
-};
+import {reducerLogin} from './screens/Login/action/action';
+import {reducerDashboard} from './screens/Dashboard/action/action';
 
-export const checkInArea = coordinates => ({
-  type: 'CHECK_AREA',
-  data: {
-    coordinates: coordinates,
-  }
-})
-
-export const setEmail = (email) => ({
-  type: 'SET_EMAIL',
-  email: email,
-})
-
-const reducer = (state = defaultState, action) => {
-    if(action.type === 'UP')
-      return {
-        value: state.value + 1,
-        email: state.email,
-        coordinates: state.coordinates
-      };
-    
-    if(action.type === 'DOWN')
-      return {
-        value: state.value - 1,
-        email: state.email,
-        coordinates: state.coordinates
-      };
-
-    if(action.type === 'CHECK_AREA')
-      return {
-        value: state.value,
-        email: state.email,
-        coordinates: action.data.coordinates,
-      };
-    
-    if(action.type === 'SET_EMAIL')
-      return {
-        value: state.value,
-        email: action.email,
-        coordinates: state.coordinates,
-      };
-
-    return state;
-};
-
+const reducer = combineReducers({reducerDashboard, reducerLogin});
 const store = createStore(reducer);
 
-const myState = store.getState();
-console.log(myState);
-console.log('TRUOC KHI DISPATCH: ' + myState.value);
-store.dispatch({ type: 'UP'});
-console.log('SAU KHI DISPATCH: ' + myState.value);
+// const myState = store.getState();
+// console.log(myState);
+// console.log('TRUOC KHI DISPATCH: ' + myState.value);
+// store.dispatch({ type: 'UP'});
+// console.log('SAU KHI DISPATCH: ' + myState.value);
 
 const RootStack = createStackNavigator (
   {
