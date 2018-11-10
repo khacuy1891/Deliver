@@ -120,24 +120,41 @@ export default class HistoryScreen extends React.Component {
   };
 
   render() {
+    const order = {
+      DeliveryTime: "ASAP",
+      customeraddress: "218 Bạch Đằng, Phước Ninh, Hải Châu, Đà Nẵng 550000, Việt Nam",
+      RestaurantName: "Diamond Sea restaurant",
+      FeeTotal: 12,
+      RestaurantAddress: "15 Lê Duẩn, Hải Châu 1, Q. Hải Châu, Đà Nẵng 550000, Việt Nam",
+      OrderCode: "DAXPAS",
+    }
     return (
       <View style={styles.container}>
-        <View style={{ flexDirection:'row', alignItems:'center', padding:10 }}>
-          <Button text={Moment(this.state.dateFrom).format("MMM DD YYYY")} raised accent
-            upperCase={false}
-            style={{container: {marginTop: 0}}}
-            onPress={this._showDateTimePickerFrom}/>
-          <Text style={{ marginStart: 10, marginEnd: 10}}>-</Text>
-          <Button text={Moment(this.state.dateTo).format("MMM DD YYYY")} raised accent
-            upperCase={false}
-            style={{container: {marginTop: 0}}}
-            onPress={this._showDateTimePickerTo}/>
+        <View style={{ justifyContent:'center', alignItems:'center' }}>
+          <View style={{ flexDirection:'row', padding:10 }}>
+            <Button text={Moment(this.state.dateFrom).format("MMM DD YYYY")} raised accent
+              upperCase={false}
+              style={{container: {marginTop: 0}}}
+              onPress={this._showDateTimePickerFrom}/>
+            <Text style={{ marginStart: 10, marginEnd: 10}}>-</Text>
+            <Button text={Moment(this.state.dateTo).format("MMM DD YYYY")} raised accent
+              upperCase={false}
+              style={{container: {marginTop: 0}}}
+              onPress={this._showDateTimePickerTo}/>
+          </View>
+          <View style={{ flexDirection:'row' }}>
+            <Text style={{ fontSize: 30, color: Colors.colorAccent }}>$</Text>
+            <Text style={{ fontSize: 30, color: Colors.colorAccent, fontWeight:'bold' }}>{this.state.feeAllTrips.toFixed(2)}</Text>          
+          </View>        
+          <Text style={{ fontSize: 20 }}>Earnings</Text>
         </View>
-        <View style={{ flexDirection:'row', justifyContent:'center' }}>
-          <Text style={{ fontSize: 30, color: Colors.colorAccent }}>$</Text>
-          <Text style={{ fontSize: 30, color: Colors.colorAccent, fontWeight:'bold' }}>{this.state.feeAllTrips.toFixed(2)}</Text>          
-        </View>
-        <Text style={{ fontSize: 20 }}>Earnings</Text>
+
+        <ItemOrderFinish
+          rowID={0}
+          rowData={order}
+          onPressItem={this._onPressItem}
+          //selected={!!this.state.selected.get(item.id)}
+        />
 
         <FlatList
           data={this.state.orders}
@@ -167,7 +184,6 @@ export default class HistoryScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
    flex: 1,
-   alignItems: 'center',
   },
   row: {
     flexDirection: 'row',

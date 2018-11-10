@@ -24,19 +24,25 @@ export default class ItemOrderFinish extends React.Component {
     const rowID = this.props.rowID;
     console.log("ItemOrderFinish: " + rowID);
     return (
-      <Card>
-        <TouchableHighlight onPress={this._onPress}>
-          <View style={{margin: 10}}>
+		<Card style={{container:{backgroundColor:'white', alignItems: 'stretch'}}}>
+      <TouchableHighlight
+        underlayColor='#bdbdbd'
+        onPress={this._onPress}>
+        <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+          <View style={{flex:1, justifyContent:'center', padding:10}}>
             <Text style={{fontSize: 14, color: Colors.colorAccent}}>{orderItem.DeliveryTime}</Text>
-            <View style={styles.row}>
-              <Text style={{fontSize: 16, fontWeight: 'bold'}}>{orderItem.RestaurantName}</Text>
-              <Text style={{fontSize: 16}}>{"$ " + orderItem.FeeTotal.toFixed(2)}</Text>
-            </View>
-            <Text style={{marginEnd: 50}}>{orderItem.RestaurantAddress}</Text>
+            <Text style={{fontSize: 16, fontWeight: 'bold'}}>{orderItem.RestaurantName}</Text>
+            <Text style={{marginTop: 5}}>{orderItem.RestaurantAddress}</Text>
             <Text style={{marginTop: 5}}>{"#" + orderItem.OrderCode}</Text>
           </View>
-        </TouchableHighlight>
-      </Card>
+          <View style={{justifyContent:'center', paddingEnd:10}}>   
+            <Text style={{fontSize: 16}}>{"$ " + orderItem.FeeTotal.toFixed(2)}</Text>
+          </View>
+        </View>
+        
+      </TouchableHighlight>
+    </Card>
+		
     );
   }
 }
