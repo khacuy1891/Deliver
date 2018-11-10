@@ -10,19 +10,21 @@ import React, {Component} from 'react';
 import {StatusBar, Text, View, Switch} from 'react-native';
 
 import { TabRouter } from 'react-navigation';
-import { Toolbar, BottomNavigation } from 'react-native-material-ui';
+import { Toolbar } from 'react-native-material-ui';
 import { connect } from "react-redux";
 import Snackbar from 'react-native-snackbar';
+import Firebase from 'firebase';
 
 import HomeScreen from './HomeScreen';
 import OrderScreen from './OrderScreen';
 import HistoryScreen from './HistoryScreen';
 import ProfileScreen from './ProfileScreen';
 
-import Firebase from 'firebase';
+import BottomNavigationView from '../../components/BottomNavigationView';
 import Colors from '../../constants/Colors';
 import FirebaseCts from '../../constants/FirebaseCts';
 import { checkInArea } from "./action/action";
+import LoadingView from '../../components/LoadingView';
 
 const DashboardStack = TabRouter (
   {
@@ -40,26 +42,9 @@ const DashboardStack = TabRouter (
 );
 
 class TabContentNavigator extends Component {
-  constructor(props, context) {
-    super(props, context);
-    // this.state = {
-    //   active: props.value.activeTab,
-    //   tabCoordinates: newProps.value.coordinates,
-    // };
-  }
-
-  //this method will not get called first time
-  componentWillReceiveProps(newProps){
-    // this.setState({
-    //   active: newProps.value.activeTab,
-    //   tabCoordinates: newProps.value.coordinates,
-    // });
-  }
-
   render() {
-    const Component = DashboardStack.getComponentForRouteName(this.props.value.activeTab);
-    // Pass data to child Component
-    return <Component data={this.props.value}/>;
+    const Component = DashboardStack.getComponentForRouteName(this.props.tabName);
+    return <Component/>;
   }
 }
 
@@ -205,37 +190,12 @@ class DashboardScreen extends React.Component {
           }}
 				/>
 
-        <TabContentNavigator value={this.state} key={this.state} />
-
-        <BottomNavigation active={this.state.activeTab} hidden={false}
-          style={{
-            container: { backgroundColor: Colors.colorAccent, borderColor: 'white' },
-          }} >
-					<BottomNavigation.Action
-						key="Home"
-						icon="home"
-						label="Home"
-						onPress={() => this.setState({ activeTab: 'Home' })}
-					/>
-					<BottomNavigation.Action
-						key="Order"
-						icon="people"
-						label="Order"
-						onPress={() => this.setState({ activeTab: 'Order' })}
-					/>
-					<BottomNavigation.Action
-						key="History"
-						icon="bookmark-border"
-						label="History"
-						onPress={() => this.setState({ activeTab: 'History' })}
-					/>
-					<BottomNavigation.Action
-						key="Profile"
-						icon="settings"
-						label="Profile"
-						onPress={() => this.setState({ activeTab: 'Profile' })}
-					/>
-				</BottomNavigation>
+        <TabContentNavigator tabName={this.state.activeTab} />
+        <BottomNavigationView
+          active={this.state.activeTab}
+          onPress={(keyTab) => this.setState({ activeTab: keyTab })}>
+        </BottomNavigationView>
+        <LoadingView/>
       </View>
     );
   }

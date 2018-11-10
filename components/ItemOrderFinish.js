@@ -24,7 +24,7 @@ export default class ItemOrderFinish extends React.Component {
     return (
       <Card>
         <TouchableHighlight
-          underlayColor='#bdbdbd'
+          underlayColor='#e0e0e0'
           onPress={this._onPress}>
           <View style={{flexDirection:'row', justifyContent:'flex-end', padding:10}}>
             <View style={{flex:1, justifyContent:'center'}}>

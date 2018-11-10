@@ -15,11 +15,14 @@ import Moment from 'moment';
 import ItemOrderFinish from '../../components/ItemOrderFinish';
 import FirebaseCts from '../../constants/FirebaseCts';
 import Colors from '../../constants/Colors';
+import { connect } from "react-redux";
+
+import { showLoading, hideLoading } from '../../action';
 
 const FORMAT_DATE_TIME_DISPLAY = "MMM DD YYYY";
 const FORMAT_DATE_TIME = "MM/DD/YYYY";
 
-export default class HistoryScreen extends React.Component {
+class HistoryScreen extends React.Component {
   state = {
     userId: '',
     orders: [],
@@ -49,7 +52,8 @@ export default class HistoryScreen extends React.Component {
     params.push("toDate=" + Moment(this.state.dateTo).format(FORMAT_DATE_TIME));
     var URL = "https://de.ringameal.com/api/getfinishorders?" + params.join('&');
 
-    console.log("getFinishOrders: " + URL);    
+    console.log("getFinishOrders: " + URL);   
+    this.props.showLoading(); 
     try {
       fetch(URL, {
         method: 'GET',
@@ -73,6 +77,7 @@ export default class HistoryScreen extends React.Component {
             feeAllTrips: feeAllTrips,
           });
         }
+        this.props.hideLoading();
       })
     }
     catch(error) {
@@ -81,6 +86,7 @@ export default class HistoryScreen extends React.Component {
         title: "response: " + error,
         duration: Snackbar.LENGTH_LONG,
       });
+      this.props.hideLoading();
     }
   }
 
@@ -193,3 +199,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+function mapStateToProps(state) {
+  return {
+  };
+}
+
+const mapDispatchToProps = dispatch => ({
+  showLoading: () => dispatch(showLoading()),
+  hideLoading: () => dispatch(hideLoading()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+) (HistoryScreen);

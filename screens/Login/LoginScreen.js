@@ -13,11 +13,12 @@ import {Button} from 'react-native-material-ui';
 import Firebase from 'firebase';
 import { connect } from "react-redux";
 
-import { setEmail } from "./action/action";
 import FirebaseCts from '../../constants/FirebaseCts';
 import Images from '../../constants/Images';
 import LoadingView from '../../components/LoadingView';
-import { showLoading, hideLoading } from '../../reducer';
+
+import { setEmail } from "./action/action";
+import { showLoading, hideLoading } from '../../action';
 
 class LoginScreen extends React.Component {
 
@@ -28,7 +29,6 @@ class LoginScreen extends React.Component {
       email_require: null,
       password_require: null,
     },
-    isLoading: false,
   };
   
   constructor(props) {
@@ -36,8 +36,6 @@ class LoginScreen extends React.Component {
     this.emailRef = React.createRef();
     this.pwRef = React.createRef();
 
-    this.showLoading = this.showLoading.bind(this);
-    this.hideLoading = this.hideLoading.bind(this);
     this.onLogin = this.onLogin.bind(this);
 
     if (!Firebase.apps.length) {
@@ -95,11 +93,10 @@ class LoginScreen extends React.Component {
     await Firebase.auth().signInWithEmailAndPassword(this.props.myEmail, this.state.password)
       .then(()=>{
         console.log('Login success');
-        this.props.navigation.navigate('Dashboard');
         this.props.hideLoading();
+        this.props.navigation.navigate('Dashboard');
       })
       .catch(function(error){
-        this.props.hideLoading();
         Alert.alert(
           'Login fail',
           '...',
@@ -108,15 +105,8 @@ class LoginScreen extends React.Component {
           ],
           {cancelable: false}
         )
+        this.props.hideLoading();
       });
-  }
-
-  showLoading() {
-    this.setState({isLoading: true})
-  }
-
-  hideLoading() {
-    this.setState({isLoading: false})
   }
 
   onForgotPassword() {
