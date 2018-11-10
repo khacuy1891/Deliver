@@ -19,8 +19,9 @@ import DashboardScreen from './screens/Dashboard/DashboardScreen';
 
 import {reducerLogin} from './screens/Login/action/action';
 import {reducerDashboard} from './screens/Dashboard/action/action';
+import {reducerApp} from './reducer'
 
-const reducer = combineReducers({reducerDashboard, reducerLogin});
+const reducer = combineReducers({reducerApp, reducerDashboard, reducerLogin});
 const store = createStore(reducer);
 
 // const myState = store.getState();

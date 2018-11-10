@@ -16,6 +16,8 @@ import { connect } from "react-redux";
 import { setEmail } from "./action/action";
 import FirebaseCts from '../../constants/FirebaseCts';
 import Images from '../../constants/Images';
+import LoadingView from '../../components/LoadingView';
+import { showLoading, hideLoading } from '../../reducer';
 
 class LoginScreen extends React.Component {
 
@@ -89,15 +91,15 @@ class LoginScreen extends React.Component {
       return;
     }
 
-    //this.showLoading();
+    this.props.showLoading();
     await Firebase.auth().signInWithEmailAndPassword(this.props.myEmail, this.state.password)
       .then(()=>{
         console.log('Login success');
         this.props.navigation.navigate('Dashboard');
-        //this.hideLoading();
+        this.props.hideLoading();
       })
       .catch(function(error){
-        //this.hideLoading();
+        this.props.hideLoading();
         Alert.alert(
           'Login fail',
           '...',
@@ -124,42 +126,45 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={{flexGrow:1, backgroundColor: '#F5FCFF'}}>
-        <View style={styles.container}>
-          <Image
-            style={{width: 100, height: 100}}
-            source={Images.ic_launcher}
-          />        
-          <Text>Fast, easy, best price</Text>
-          <View style={styles.form}>
-            <TextField
-              label='Email'
-              ref={this.emailRef}
-              error={this.state.error.email_require}
-              returnKeyType='next'
-              value={this.props.myEmail}
-              onSubmitEditing={() => this.pwRef.current.focus()}
-              onChangeText={ (text) => this.props.setEmail(text) }
-            />
-            <TextField
-              label='Password'
-              ref={this.pwRef}
-              error={this.state.error.password_require}
-              secureTextEntry={true}
-              value={this.state.password}
-              onChangeText={ (text) => this.setState({ password: text }) }
-            />
+      <View style={{flex:1}}>
+        <ScrollView contentContainerStyle={{flexGrow:1, backgroundColor: '#F5FCFF'}}>
+          <View style={styles.container}>
+            <Image
+              style={{width: 100, height: 100}}
+              source={Images.ic_launcher}
+            />        
+            <Text>Fast, easy, best price</Text>
+            <View style={styles.form}>
+              <TextField
+                label='Email'
+                ref={this.emailRef}
+                error={this.state.error.email_require}
+                returnKeyType='next'
+                value={this.props.myEmail}
+                onSubmitEditing={() => this.pwRef.current.focus()}
+                onChangeText={ (text) => this.props.setEmail(text) }
+              />
+              <TextField
+                label='Password'
+                ref={this.pwRef}
+                error={this.state.error.password_require}
+                secureTextEntry={true}
+                value={this.state.password}
+                onChangeText={ (text) => this.setState({ password: text }) }
+              />
 
-            <Button text="Login" raised accent
-              style={{container: {marginTop: 30}}}
-              onPress={this.onLogin}/>
+              <Button text="Login" raised accent
+                style={{container: {marginTop: 30}}}
+                onPress={this.onLogin}/>
+            </View>
+
+            <Text style={{marginTop: 20, marginBottom: 20}}
+              onPress={()=> this.onForgotPassword()}>Don't remember password?
+            </Text>  
           </View>
-
-          <Text style={{marginTop: 20, marginBottom: 20}}
-            onPress={()=> this.onForgotPassword()}>Don't remember password?
-          </Text>  
-        </View>
-      </ScrollView>
+        </ScrollView>
+        <LoadingView/>
+      </View>
     );
   }
 }
@@ -182,7 +187,9 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setEmail: (email) => dispatch(setEmail(email))
+  setEmail: (email) => dispatch(setEmail(email)),
+  showLoading: () => dispatch(showLoading()),
+  hideLoading: () => dispatch(hideLoading()),
 });
 
 export default connect(

@@ -12,8 +12,6 @@ import { Card } from 'react-native-material-ui';
 
 import Colors from '../constants/Colors';
 
-const ic_near = require('../assets/images/ic_near.png');
-
 export default class ItemOrderFinish extends React.Component {
   _onPress = () => {
     this.props.onPressItem(this.props.rowID);
