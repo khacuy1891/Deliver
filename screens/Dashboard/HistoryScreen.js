@@ -16,6 +16,8 @@ import ItemOrderFinish from '../../components/ItemOrderFinish';
 import FirebaseCts from '../../constants/FirebaseCts';
 import Colors from '../../constants/Colors';
 
+const FORMAT_DATE_TIME_DISPLAY = "MMM DD YYYY";
+const FORMAT_DATE_TIME = "MM/DD/YYYY";
 
 export default class HistoryScreen extends React.Component {
   state = {
@@ -43,8 +45,8 @@ export default class HistoryScreen extends React.Component {
     var params = [];
     params.push("token=" + FirebaseCts.KEY_TOKEN);
     params.push("deliverId=hQg8ovFUIsdOkxtAAiuJHaiTMpk2");
-    params.push("fromDate=" + Moment(this.state.dateFrom).format("MM/DD/YYYY"));
-    params.push("toDate=" + Moment(this.state.dateTo).format("MM/DD/YYYY"));
+    params.push("fromDate=" + Moment(this.state.dateFrom).format(FORMAT_DATE_TIME));
+    params.push("toDate=" + Moment(this.state.dateTo).format(FORMAT_DATE_TIME));
     var URL = "https://de.ringameal.com/api/getfinishorders?" + params.join('&');
 
     console.log("getFinishOrders: " + URL);    
@@ -131,13 +133,13 @@ export default class HistoryScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{ justifyContent:'center', alignItems:'center' }}>
-          <View style={{ flexDirection:'row', padding:10 }}>
-            <Button text={Moment(this.state.dateFrom).format("MMM DD YYYY")} raised accent
+          <View style={[styles.row, { marginTop:10 }]}>
+            <Button text={Moment(this.state.dateFrom).format(FORMAT_DATE_TIME_DISPLAY)} raised accent
               upperCase={false}
               style={{container: {marginTop: 0}}}
               onPress={this._showDateTimePickerFrom}/>
             <Text style={{ marginStart: 10, marginEnd: 10}}>-</Text>
-            <Button text={Moment(this.state.dateTo).format("MMM DD YYYY")} raised accent
+            <Button text={Moment(this.state.dateTo).format(FORMAT_DATE_TIME_DISPLAY)} raised accent
               upperCase={false}
               style={{container: {marginTop: 0}}}
               onPress={this._showDateTimePickerTo}/>
@@ -187,7 +189,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    //alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

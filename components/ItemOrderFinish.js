@@ -24,25 +24,24 @@ export default class ItemOrderFinish extends React.Component {
     const rowID = this.props.rowID;
     console.log("ItemOrderFinish: " + rowID);
     return (
-		<Card style={{container:{backgroundColor:'white', alignItems: 'stretch'}}}>
-      <TouchableHighlight
-        underlayColor='#bdbdbd'
-        onPress={this._onPress}>
-        <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
-          <View style={{flex:1, justifyContent:'center', padding:10}}>
-            <Text style={{fontSize: 14, color: Colors.colorAccent}}>{orderItem.DeliveryTime}</Text>
-            <Text style={{fontSize: 16, fontWeight: 'bold'}}>{orderItem.RestaurantName}</Text>
-            <Text style={{marginTop: 5}}>{orderItem.RestaurantAddress}</Text>
-            <Text style={{marginTop: 5}}>{"#" + orderItem.OrderCode}</Text>
+      <Card>
+        <TouchableHighlight
+          underlayColor='#bdbdbd'
+          onPress={this._onPress}>
+          <View style={{flexDirection:'row', justifyContent:'flex-end', padding:10}}>
+            <View style={{flex:1, justifyContent:'center'}}>
+              <Text style={{fontSize: 14, color: Colors.colorAccent}}>{orderItem.DeliveryTime}</Text>
+              <Text style={{fontSize: 16, fontWeight: 'bold'}}>{orderItem.RestaurantName}</Text>
+              <Text style={{marginTop: 5}}>{orderItem.RestaurantAddress}</Text>
+              <Text style={{marginTop: 5}}>{"#" + orderItem.OrderCode}</Text>
+            </View>
+            <View style={{justifyContent:'center', marginStart:10}}>   
+              <Text style={{fontSize: 16}}>{"$ " + orderItem.FeeTotal.toFixed(2)}</Text>
+            </View>
           </View>
-          <View style={{justifyContent:'center', paddingEnd:10}}>   
-            <Text style={{fontSize: 16}}>{"$ " + orderItem.FeeTotal.toFixed(2)}</Text>
-          </View>
-        </View>
-        
-      </TouchableHighlight>
-    </Card>
-		
+          
+        </TouchableHighlight>
+      </Card>
     );
   }
 }
