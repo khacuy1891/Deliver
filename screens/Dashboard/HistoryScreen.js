@@ -16,11 +16,20 @@ import ItemOrderFinish from '../../components/ItemOrderFinish';
 import FirebaseCts from '../../constants/FirebaseCts';
 import Colors from '../../constants/Colors';
 import { connect } from "react-redux";
+import axios from 'axios';
 
 import { showLoading, hideLoading } from '../../action';
+import { __await } from 'tslib';
 
 const FORMAT_DATE_TIME_DISPLAY = "MMM DD YYYY";
 const FORMAT_DATE_TIME = "MM/DD/YYYY";
+const instance = axios.create({
+  baseURL: 'https://de.ringameal.com/',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }
+});
 
 class HistoryScreen extends React.Component {
   state = {
@@ -44,48 +53,36 @@ class HistoryScreen extends React.Component {
     this.getFinishOrders();
   }
 
-  getFinishOrders() {
-    var params = [];
-    params.push("token=" + FirebaseCts.KEY_TOKEN);
-    params.push("deliverId=hQg8ovFUIsdOkxtAAiuJHaiTMpk2");
-    params.push("fromDate=" + Moment(this.state.dateFrom).format(FORMAT_DATE_TIME));
-    params.push("toDate=" + Moment(this.state.dateTo).format(FORMAT_DATE_TIME));
-    var URL = "https://de.ringameal.com/api/getfinishorders?" + params.join('&');
+  async getFinishOrders() {
+    var params = {
+      token: FirebaseCts.KEY_TOKEN,
+      deliverId: 'hQg8ovFUIsdOkxtAAiuJHaiTMpk2',
+      fromDate: Moment(this.state.dateFrom).format(FORMAT_DATE_TIME),
+      toDate: Moment(this.state.dateTo).format(FORMAT_DATE_TIME),
+    }
 
-    console.log("getFinishOrders: " + URL);   
-    this.props.showLoading(); 
+    this.props.showLoading();
     try {
-      fetch(URL, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if(responseJson.result != null) {
-          var feeAllTrips = 0.0;
-          var listOrder = responseJson.result;
-          listOrder.forEach(order => {
-            order.FeeTotal = (order.FeeForDeliver + order.TipsForDeliver);
-            feeAllTrips += order.FeeTotal;
-          });
-          console.log("feeAllTrips: " + feeAllTrips);
-          this.setState({
-            orders: listOrder,
-            feeAllTrips: feeAllTrips,
-          });
-        }
-        this.props.hideLoading();
-      })
+      //let request = await axios.get("/get");
+      let response = await instance.get("/api/getfinishorders", params);
+      let responseJson = response.data;
+      if(responseJson.result != null) {
+        var feeAllTrips = 0.0;
+        var listOrder = responseJson.result;
+        listOrder.forEach(order => {
+          order.FeeTotal = (order.FeeForDeliver + order.TipsForDeliver);
+          feeAllTrips += order.FeeTotal;
+        });
+        console.log("feeAllTrips: " + feeAllTrips);
+        this.setState({
+          orders: listOrder,
+          feeAllTrips: feeAllTrips,
+        });
+      }
+      this.props.hideLoading();
     }
     catch(error) {
       console.error(error);
-      Snackbar.show({
-        title: "response: " + error,
-        duration: Snackbar.LENGTH_LONG,
-      });
       this.props.hideLoading();
     }
   }

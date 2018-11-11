@@ -7,13 +7,14 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, ScrollView, Alert} from 'react-native';
+import {StatusBar, StyleSheet, Text, View, Image, ScrollView, Alert} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
 import {Button} from 'react-native-material-ui';
 import Firebase from 'firebase';
 import { connect } from "react-redux";
 
 import FirebaseCts from '../../constants/FirebaseCts';
+import Colors from '../../constants/Colors';
 import Images from '../../constants/Images';
 import LoadingView from '../../components/LoadingView';
 
@@ -117,6 +118,7 @@ class LoginScreen extends React.Component {
   render() {
     return (
       <View style={{flex:1}}>
+        {/* <StatusBar backgroundColor={Colors.colorPrimary} hidden={true}/> */}
         <ScrollView contentContainerStyle={{flexGrow:1, backgroundColor: '#F5FCFF'}}>
           <View style={styles.container}>
             <Image
@@ -153,7 +155,7 @@ class LoginScreen extends React.Component {
             </Text>  
           </View>
         </ScrollView>
-        <LoadingView/>
+        <LoadingView text='Checking...'/>
       </View>
     );
   }

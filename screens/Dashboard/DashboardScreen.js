@@ -14,6 +14,7 @@ import { Toolbar } from 'react-native-material-ui';
 import { connect } from "react-redux";
 import Snackbar from 'react-native-snackbar';
 import Firebase from 'firebase';
+import axios from 'axios';
 
 import HomeScreen from './HomeScreen';
 import OrderScreen from './OrderScreen';
@@ -25,6 +26,7 @@ import Colors from '../../constants/Colors';
 import FirebaseCts from '../../constants/FirebaseCts';
 import { checkInArea } from "./action/action";
 import LoadingView from '../../components/LoadingView';
+import { showLoading, hideLoading } from '../../action';
 
 const DashboardStack = TabRouter (
   {
@@ -109,51 +111,43 @@ class DashboardScreen extends React.Component {
     });
   }
 
-  checkDeliverInArea(location) {
+  async checkDeliverInArea(location) {
     console.log("checkDeliverInArea: " + this.state.userId);
+    let body = {
+      token: FirebaseCts.KEY_TOKEN,
+      deliverId: this.state.userId,
+      lat: location.latitude,
+      lng: location.longitude,
+    };
+
+    this.props.showLoading();
     try {
-      fetch('https://d.ringameal.com/api/checklocationinareafordeliver', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token: FirebaseCts.KEY_TOKEN,
-          deliverId: this.state.userId,
-          lat: location.latitude,
-          lng: location.longitude,
-        })
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if(responseJson.result != null) {
-          var isInArea = responseJson.result.result;
-          this.setState({
-            isLoading: false,
-            isOnline: isInArea,
-          });
+      let response = await axios.post('/api/checklocationinareafordeliver', body);
+      let responseJson = response.data;
+      if(responseJson.result != null) {
+        var isInArea = responseJson.result.result;
+        this.setState({
+          isLoading: false,
+          isOnline: isInArea,
+        });
 
-          var title = isInArea? "You're online" : "Your location is out of service areas";
-          Snackbar.show({
-            title: title,
-            duration: Snackbar.LENGTH_LONG,
-          });
-          this.saveWorkStatus(isInArea);
+        Snackbar.show({
+          title: isInArea? "You're online" : "Your location is out of service areas",
+          duration: Snackbar.LENGTH_LONG,
+        });
+        this.saveWorkStatus(isInArea);
 
-          // set Coordinates to Redux
-          if(responseJson.result.AreaShape != null) {
-            this.props.changeCoordinates(responseJson.result.AreaShape);
-          }
+        // set Coordinates to Redux
+        if(responseJson.result.AreaShape != null) {
+          this.props.changeCoordinates(responseJson.result.AreaShape);
         }
-      })
+      }
+
+      this.props.hideLoading();
     }
     catch(error) {
       console.error(error);
-      Snackbar.show({
-        title: "response: " + error,
-        duration: Snackbar.LENGTH_LONG,
-      });
+      this.props.hideLoading();
     }
   }
 
@@ -195,7 +189,7 @@ class DashboardScreen extends React.Component {
           active={this.state.activeTab}
           onPress={(keyTab) => this.setState({ activeTab: keyTab })}>
         </BottomNavigationView>
-        <LoadingView/>
+        <LoadingView text='Check Deliver in area...'/>
       </View>
     );
   }
@@ -207,7 +201,9 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  changeCoordinates: (coordinates) => dispatch(checkInArea(coordinates))
+  showLoading: () => dispatch(showLoading()),
+  hideLoading: () => dispatch(hideLoading()),
+  changeCoordinates: (coordinates) => dispatch(checkInArea(coordinates)),
 });
 
 export default connect(
